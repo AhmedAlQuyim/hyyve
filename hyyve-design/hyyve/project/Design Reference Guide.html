@@ -1,0 +1,965 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Hyyve — Design Reference Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    /* Core palette — cool neutrals + single warm accent */
+    --ink:        #0B1220;   /* near-black blue, body text */
+    --midnight:   #0F1B33;   /* primary deep blue */
+    --slate-900:  #1B2742;
+    --slate-700:  #354766;
+    --slate-500:  #6B7C9B;
+    --slate-300:  #B6C0D2;
+    --slate-200:  #D6DCE6;
+    --slate-100:  #E9ECF2;
+    --paper:      #F4F2EC;   /* off-white, slightly warm */
+    --paper-2:    #ECE8DE;
+    --paper-tint: #FBF9F4;
+
+    --amber:      #E8A95C;   /* warm hive accent */
+    --amber-soft: #F4D9A8;
+    --signal:     #5B7CFF;   /* cool electric accent — used sparingly */
+
+    --radius-s: 6px;
+    --radius-m: 14px;
+    --radius-l: 22px;
+
+    --shadow-sm: 0 1px 2px rgba(15,27,51,.06), 0 2px 8px rgba(15,27,51,.04);
+    --shadow-md: 0 6px 24px rgba(15,27,51,.08), 0 1px 3px rgba(15,27,51,.05);
+    --shadow-lg: 0 30px 60px -20px rgba(15,27,51,.18), 0 12px 24px -12px rgba(15,27,51,.08);
+
+    --font-display: "Fraunces", "Times New Roman", serif;
+    --font-body:    "Inter Tight", -apple-system, system-ui, sans-serif;
+    --font-mono:    "JetBrains Mono", "SF Mono", Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .page {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 64px 56px 120px;
+  }
+
+  /* Page heading + nav */
+  .doc-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--slate-200);
+    padding-bottom: 28px;
+    margin-bottom: 56px;
+  }
+  .doc-head .meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--slate-500);
+  }
+  .doc-head h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 56px;
+    line-height: 1;
+    letter-spacing: -.02em;
+    margin: 12px 0 0;
+    font-variation-settings: "opsz" 144;
+  }
+  .doc-head .right {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--slate-500);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    line-height: 1.7;
+  }
+
+  section.block {
+    margin-bottom: 96px;
+    scroll-margin-top: 24px;
+  }
+  .section-head {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 32px;
+    align-items: baseline;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--slate-200);
+  }
+  .section-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--slate-500);
+  }
+  .section-head h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 34px;
+    line-height: 1.1;
+    letter-spacing: -.015em;
+    margin: 0;
+    font-variation-settings: "opsz" 144;
+  }
+  .section-head p {
+    grid-column: 2;
+    margin: 8px 0 0;
+    color: var(--slate-700);
+    font-size: 15px;
+    max-width: 640px;
+  }
+
+  .grid { display: grid; gap: 20px; }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-6 { grid-template-columns: repeat(6, 1fr); }
+
+  .card {
+    background: var(--paper-tint);
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-m);
+    padding: 24px;
+  }
+
+  .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--slate-500);
+    display: block;
+  }
+
+  /* ============ LOGO ============ */
+  .logo-stage {
+    background: var(--paper-tint);
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-l);
+    padding: 56px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 40px;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  .logo-stage.dark {
+    background: var(--midnight);
+    border-color: var(--slate-900);
+    color: var(--paper);
+  }
+  .logo-mark-large {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: 180px;
+    line-height: .85;
+    letter-spacing: -.04em;
+    color: var(--midnight);
+    font-variation-settings: "opsz" 144;
+    position: relative;
+  }
+  .dark .logo-mark-large { color: var(--paper); }
+  .logo-mark-large .dot {
+    color: var(--amber);
+  }
+  .logo-mark-large .y-lig {
+    position: relative;
+    display: inline-block;
+  }
+
+  .logo-meta { font-size: 14px; color: var(--slate-700); }
+  .dark .logo-meta { color: var(--slate-300); }
+
+  .logo-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .logo-tile {
+    aspect-ratio: 1.2;
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-m);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .logo-tile.paper { background: var(--paper-tint); }
+  .logo-tile.midnight { background: var(--midnight); }
+  .logo-tile.amber   { background: var(--amber); }
+  .logo-tile.slate   { background: var(--slate-900); }
+  .logo-tile .cap {
+    position: absolute;
+    bottom: 12px; left: 14px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--slate-500);
+  }
+  .logo-tile.midnight .cap, .logo-tile.slate .cap { color: var(--slate-300); }
+  .logo-tile.amber .cap { color: var(--midnight); opacity: .7; }
+
+  /* ============ COLOR ============ */
+  .swatch {
+    border-radius: var(--radius-m);
+    overflow: hidden;
+    border: 1px solid var(--slate-200);
+    background: var(--paper-tint);
+    display: flex;
+    flex-direction: column;
+  }
+  .swatch .chip {
+    aspect-ratio: 1.5;
+    position: relative;
+  }
+  .swatch .chip .pin {
+    position: absolute; top: 12px; left: 14px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: rgba(255,255,255,.5);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.06);
+  }
+  .swatch .meta { padding: 14px 16px 16px; }
+  .swatch .meta .name { font-weight: 500; font-size: 14px; }
+  .swatch .meta .hex {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--slate-500);
+    letter-spacing: .04em;
+    margin-top: 4px;
+  }
+
+  .scale-row {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+  .scale-row .step {
+    aspect-ratio: 1.4;
+    border-radius: 8px;
+    position: relative;
+    border: 1px solid rgba(15,27,51,.06);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 6px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: .08em;
+  }
+  .scale-row .step.dark-fg { color: var(--paper); }
+  .scale-row .step.light-fg { color: var(--slate-700); }
+
+  /* ============ TYPE ============ */
+  .type-row {
+    display: grid;
+    grid-template-columns: 160px 1fr 200px;
+    gap: 32px;
+    align-items: baseline;
+    padding: 28px 0;
+    border-top: 1px solid var(--slate-200);
+  }
+  .type-row:first-of-type { border-top: none; }
+  .type-row .key {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--slate-500);
+  }
+  .type-row .specimen { color: var(--ink); }
+  .type-row .specs {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--slate-500);
+    line-height: 1.7;
+  }
+  .specimen.display-xl {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: 88px;
+    line-height: .95;
+    letter-spacing: -.03em;
+    font-variation-settings: "opsz" 144;
+  }
+  .specimen.display-l {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 56px;
+    line-height: 1;
+    letter-spacing: -.02em;
+    font-variation-settings: "opsz" 144;
+  }
+  .specimen.display-m {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 1.05;
+    letter-spacing: -.015em;
+    font-variation-settings: "opsz" 96;
+  }
+  .specimen.body-l {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1.5;
+    letter-spacing: -.005em;
+    color: var(--slate-700);
+  }
+  .specimen.body-m {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--slate-700);
+  }
+  .specimen.label-mono {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--slate-500);
+  }
+
+  /* ============ COMPONENTS ============ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all .2s ease;
+    text-decoration: none;
+  }
+  .btn-primary { background: var(--midnight); color: var(--paper); }
+  .btn-primary:hover { background: var(--ink); }
+  .btn-secondary { background: transparent; color: var(--ink); border-color: var(--slate-300); }
+  .btn-secondary:hover { border-color: var(--ink); }
+  .btn-amber { background: var(--amber); color: var(--midnight); }
+  .btn-amber:hover { background: #DD9A48; }
+  .btn .arrow {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.15);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px;
+  }
+  .btn-secondary .arrow { background: var(--slate-100); color: var(--ink); }
+  .btn-amber .arrow { background: rgba(15,27,51,.12); color: var(--midnight); }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: var(--paper-2);
+    border: 1px solid var(--slate-200);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--slate-700);
+  }
+  .pill .dot-amber {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 0 4px rgba(232,169,92,.18);
+  }
+
+  .input-demo {
+    display: flex;
+    align-items: center;
+    background: var(--paper-tint);
+    border: 1px solid var(--slate-200);
+    border-radius: 999px;
+    padding: 6px 6px 6px 22px;
+    width: 100%;
+    max-width: 460px;
+  }
+  .input-demo input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--ink);
+  }
+
+  .feature-card {
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-l);
+    padding: 28px;
+    background: var(--paper-tint);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-height: 220px;
+  }
+  .feature-card .icon-wrap {
+    width: 48px; height: 48px;
+    border-radius: 14px;
+    background: var(--midnight);
+    color: var(--paper);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .feature-card h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.15;
+    margin: 0;
+    letter-spacing: -.01em;
+  }
+  .feature-card p {
+    margin: 0;
+    color: var(--slate-700);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  /* hex/cell motif */
+  .motif-stage {
+    background: var(--midnight);
+    color: var(--paper);
+    border-radius: var(--radius-l);
+    padding: 56px;
+    overflow: hidden;
+    position: relative;
+    min-height: 360px;
+  }
+  .motif-stage h3 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: 40px;
+    margin: 0 0 6px;
+    letter-spacing: -.02em;
+  }
+  .motif-stage p { color: var(--slate-300); margin: 0; max-width: 360px; }
+  .motif-stage .cells {
+    position: absolute;
+    right: -40px; top: -40px;
+    width: 480px; height: 480px;
+  }
+
+  /* token row */
+  .tokens {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .token-list {
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-m);
+    padding: 4px 0;
+    background: var(--paper-tint);
+  }
+  .token-list .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 16px;
+    padding: 14px 22px;
+    border-top: 1px solid var(--slate-200);
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .token-list .row:first-child { border-top: none; }
+  .token-list .row .k { color: var(--slate-700); }
+  .token-list .row .v { color: var(--slate-500); }
+  .token-list .row .vis {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    border: 1px solid rgba(0,0,0,.06);
+  }
+
+  /* voice */
+  .voice {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .voice .col {
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-m);
+    padding: 28px;
+    background: var(--paper-tint);
+  }
+  .voice .col.do { background: var(--paper-tint); }
+  .voice .col.dont { background: #FBF1ED; border-color: #F0D9D0; }
+  .voice .col h5 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--slate-500);
+    margin: 0 0 14px;
+  }
+  .voice .col.dont h5 { color: #B45A3F; }
+  .voice .col p {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.25;
+    letter-spacing: -.01em;
+    margin: 0 0 12px;
+  }
+  .voice .col p:last-child { margin-bottom: 0; }
+
+  /* shadows */
+  .shadow-card {
+    background: var(--paper-tint);
+    border-radius: var(--radius-m);
+    height: 120px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--slate-700);
+  }
+
+  /* footer */
+  footer.doc-foot {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--slate-200);
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--slate-500);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- =========== HEADER =========== -->
+  <header class="doc-head">
+    <div>
+      <div class="meta">v0.1 · Reference Guide · 2026</div>
+      <h1>hyyve<span style="color:var(--amber)">.</span></h1>
+    </div>
+    <div class="right">
+      <div>Brand foundation</div>
+      <div>For internal review</div>
+      <div>Cool neutrals · warm accent</div>
+    </div>
+  </header>
+
+  <!-- =========== 01 ESSENCE =========== -->
+  <section class="block">
+    <div class="section-head">
+      <div class="section-num">01 / Essence</div>
+      <h2>Collective intelligence, made&nbsp;calm.</h2>
+      <p>Hyyve helps mid-market businesses orchestrate AI agents and automation. The brand sits between two truths: the swarm — many small intelligences working together — and the hub — one calm, central place to direct them. Cool, considered surfaces. One warm signal of life.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <span class="label">Posture</span>
+        <p style="font-family:var(--font-display); font-size:24px; font-weight:400; line-height:1.2; margin:8px 0 0; letter-spacing:-.01em;">Quietly confident.</p>
+        <p style="color:var(--slate-700); font-size:14px;">We don't shout. We're the steady hand on the wheel of your operations.</p>
+      </div>
+      <div class="card">
+        <span class="label">Promise</span>
+        <p style="font-family:var(--font-display); font-size:24px; font-weight:400; line-height:1.2; margin:8px 0 0; letter-spacing:-.01em;">Less busywork. More business.</p>
+        <p style="color:var(--slate-700); font-size:14px;">Agents handle the repetition; your team handles the judgment.</p>
+      </div>
+      <div class="card">
+        <span class="label">Metaphor</span>
+        <p style="font-family:var(--font-display); font-size:24px; font-weight:400; line-height:1.2; margin:8px 0 0; letter-spacing:-.01em;">Hive, not swarm.</p>
+        <p style="color:var(--slate-700); font-size:14px;">Cells, structure, choreography — never chaotic, never frantic.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========== 02 LOGO =========== -->
+  <section class="block">
+    <div class="section-head">
+      <div class="section-num">02 / Logo</div>
+      <h2>Wordmark.</h2>
+      <p>Set in Fraunces Light. The double-y is the signature — two stems mirrored to suggest a hexagonal cell, two agents in dialogue. The terminal dot is the only place the warm amber appears in the wordmark; it's the spark of intelligence.</p>
+    </div>
+
+    <div class="logo-stage">
+      <div class="logo-mark-large">
+        h<span class="y-lig">y</span><span class="y-lig">y</span>ve<span class="dot">.</span>
+      </div>
+      <div class="logo-meta">
+        <span class="label" style="margin-bottom:8px">Construction</span>
+        <p style="margin:0 0 16px;">Fraunces, weight 300, optical size 144. Letter-spacing -4%. The dot is set in the brand amber at the same x-height as the "e" terminal.</p>
+        <span class="label" style="margin-bottom:8px">Clear space</span>
+        <p style="margin:0;">Minimum padding equal to the cap-height of the "h" on all sides.</p>
+      </div>
+    </div>
+
+    <div class="logo-row">
+      <div class="logo-tile paper">
+        <div style="font-family:var(--font-display); font-weight:300; font-size:54px; letter-spacing:-.04em; color:var(--midnight); font-variation-settings:'opsz' 144;">hyyve<span style="color:var(--amber)">.</span></div>
+        <div class="cap">Primary · paper</div>
+      </div>
+      <div class="logo-tile midnight">
+        <div style="font-family:var(--font-display); font-weight:300; font-size:54px; letter-spacing:-.04em; color:var(--paper); font-variation-settings:'opsz' 144;">hyyve<span style="color:var(--amber)">.</span></div>
+        <div class="cap">Reverse · midnight</div>
+      </div>
+      <div class="logo-tile amber">
+        <div style="font-family:var(--font-display); font-weight:300; font-size:54px; letter-spacing:-.04em; color:var(--midnight); font-variation-settings:'opsz' 144;">hyyve<span style="color:var(--midnight)">.</span></div>
+        <div class="cap">Amber · solid</div>
+      </div>
+      <div class="logo-tile slate" style="background: var(--paper-tint);">
+        <!-- Standalone mark -->
+        <svg viewBox="0 0 100 100" width="80" height="80" aria-hidden="true">
+          <defs>
+            <clipPath id="hex-clip">
+              <polygon points="50,4 92,28 92,72 50,96 8,72 8,28" />
+            </clipPath>
+          </defs>
+          <polygon points="50,4 92,28 92,72 50,96 8,72 8,28" fill="none" stroke="#0F1B33" stroke-width="2"/>
+          <circle cx="50" cy="50" r="6" fill="#E8A95C"/>
+          <line x1="50" y1="50" x2="50" y2="14" stroke="#0F1B33" stroke-width="1.5"/>
+          <line x1="50" y1="50" x2="82" y2="32" stroke="#0F1B33" stroke-width="1.5"/>
+          <line x1="50" y1="50" x2="82" y2="68" stroke="#0F1B33" stroke-width="1.5"/>
+          <line x1="50" y1="50" x2="50" y2="86" stroke="#0F1B33" stroke-width="1.5"/>
+          <line x1="50" y1="50" x2="18" y2="68" stroke="#0F1B33" stroke-width="1.5"/>
+          <line x1="50" y1="50" x2="18" y2="32" stroke="#0F1B33" stroke-width="1.5"/>
+          <circle cx="50" cy="14" r="3" fill="#0F1B33"/>
+          <circle cx="82" cy="32" r="3" fill="#0F1B33"/>
+          <circle cx="82" cy="68" r="3" fill="#0F1B33"/>
+          <circle cx="50" cy="86" r="3" fill="#0F1B33"/>
+          <circle cx="18" cy="68" r="3" fill="#0F1B33"/>
+          <circle cx="18" cy="32" r="3" fill="#0F1B33"/>
+        </svg>
+        <div class="cap">Glyph · cell-mark</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========== 03 COLOR =========== -->
+  <section class="block">
+    <div class="section-head">
+      <div class="section-num">03 / Color</div>
+      <h2>Cool neutrals,<br/>one warm signal.</h2>
+      <p>The palette is cool, paper-toned, and patient. Midnight carries weight; paper holds the surface. Amber is reserved — it appears where intelligence happens: the active cursor, the live agent, the call-to-action.</p>
+    </div>
+
+    <div class="grid grid-4" style="margin-bottom: 32px;">
+      <div class="swatch">
+        <div class="chip" style="background: var(--midnight)"><span class="pin"></span></div>
+        <div class="meta">
+          <div class="name">Midnight</div>
+          <div class="hex">#0F1B33 · oklch(20% .04 260)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background: var(--paper)"><span class="pin" style="background:rgba(15,27,51,.15)"></span></div>
+        <div class="meta">
+          <div class="name">Paper</div>
+          <div class="hex">#F4F2EC · oklch(95% .01 85)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background: var(--amber)"><span class="pin" style="background:rgba(15,27,51,.18)"></span></div>
+        <div class="meta">
+          <div class="name">Amber</div>
+          <div class="hex">#E8A95C · oklch(76% .12 70)</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="chip" style="background: var(--slate-700)"><span class="pin"></span></div>
+        <div class="meta">
+          <div class="name">Slate</div>
+          <div class="hex">#354766 · oklch(38% .04 260)</div>
+        </div>
+      </div>
+    </div>
+
+    <span class="label" style="margin-bottom:10px;">Slate scale</span>
+    <div class="scale-row">
+      <div class="step light-fg" style="background:#F4F6FA">100</div>
+      <div class="step light-fg" style="background:#E9ECF2">200</div>
+      <div class="step light-fg" style="background:#D6DCE6">300</div>
+      <div class="step light-fg" style="background:#B6C0D2">400</div>
+      <div class="step dark-fg" style="background:#6B7C9B">500</div>
+      <div class="step dark-fg" style="background:#4D5F7E">600</div>
+      <div class="step dark-fg" style="background:#354766">700</div>
+      <div class="step dark-fg" style="background:#1B2742">900</div>
+    </div>
+
+    <span class="label" style="margin: 24px 0 10px; display:block;">Paper / amber scale</span>
+    <div class="scale-row">
+      <div class="step light-fg" style="background:#FBF9F4">P-50</div>
+      <div class="step light-fg" style="background:#F4F2EC">P-100</div>
+      <div class="step light-fg" style="background:#ECE8DE">P-200</div>
+      <div class="step light-fg" style="background:#DBD3C0">P-300</div>
+      <div class="step light-fg" style="background:#F4D9A8">A-200</div>
+      <div class="step dark-fg" style="background:#E8A95C; color:var(--midnight)">A-400</div>
+      <div class="step dark-fg" style="background:#C68838">A-600</div>
+      <div class="step dark-fg" style="background:#8C5E22">A-800</div>
+    </div>
+  </section>
+
+  <!-- =========== 04 TYPE =========== -->
+  <section class="block">
+    <div class="section-head">
+      <div class="section-num">04 / Typography</div>
+      <h2>Fraunces &amp; Inter Tight.</h2>
+      <p>Fraunces brings warmth and editorial poise to display work — its soft optical sizing reads more "letterpress" than "tech." Inter Tight handles UI and body for clean, dense legibility. JetBrains Mono provides technical credibility in metadata, labels, and code.</p>
+    </div>
+
+    <div class="type-row">
+      <div class="key">Display XL</div>
+      <div class="specimen display-xl">A calmer way to&nbsp;run AI.</div>
+      <div class="specs">Fraunces<br/>Light · 300<br/>88 / 95% / -3%<br/>opsz 144</div>
+    </div>
+    <div class="type-row">
+      <div class="key">Display L</div>
+      <div class="specimen display-l">Agents that fit your team.</div>
+      <div class="specs">Fraunces<br/>Regular · 400<br/>56 / 100% / -2%</div>
+    </div>
+    <div class="type-row">
+      <div class="key">Display M</div>
+      <div class="specimen display-m">Built for the work you actually do.</div>
+      <div class="specs">Fraunces<br/>Regular · 400<br/>36 / 105% / -1.5%</div>
+    </div>
+    <div class="type-row">
+      <div class="key">Body L</div>
+      <div class="specimen body-l">Hyyve helps mid-market teams put AI to work — without the consulting deck. We design and ship the agents, automations, and infrastructure your operations need, then stay close enough to keep them honest.</div>
+      <div class="specs">Inter Tight<br/>Regular · 400<br/>20 / 150%</div>
+    </div>
+    <div class="type-row">
+      <div class="key">Body M</div>
+      <div class="specimen body-m">For paragraphs, descriptions, and reading in flow. The default body weight on most surfaces.</div>
+      <div class="specs">Inter Tight<br/>Regular · 400<br/>16 / 155%</div>
+    </div>
+    <div class="type-row">
+      <div class="key">Mono Label</div>
+      <div class="specimen label-mono">— 02 / Live agents · 47 deployed</div>
+      <div class="specs">JetBrains Mono<br/>Regular · 400<br/>12 / .12em</div>
+    </div>
+  </section>
+
+  <!-- =========== 05 MOTIF =========== -->
+  <section class="block">
+    <div class="section-head">
+      <div class="section-num">05 / Motif</div>
+      <h2>The cell.</h2>
+      <p>A hexagon is the only literal nod to the hive — used as a structural device, never decorative. It appears in the logo glyph, as a chart frame, and as a layout grid for case-study cards. We never draw bees, honeycomb textures, or honey drips.</p>
+    </div>
+
+    <div class="motif-stage">
+      <span class="pill" style="background:rgba(244,242,236,.08); border-color:rgba(244,242,236,.15); color:var(--slate-300);">
+        <span class="dot-amber"></span>Live network · 12 cells
+      </span>
+      <h3 style="margin-top:24px;">One hive,<br/>many minds.</h3>
+      <p>Each cell is an agent. Each line is a hand-off. The structure is the product.</p>
+
+      <svg class="cells" viewBox="0 0 480 480" aria-hidden="true">
+        <defs>
+          <pattern id="hexgrid" width="60" height="69.28" patternUnits="userSpaceOnUse" patternTransform="translate(0,0)">
+            <polygon points="30,2 58,18 58,52 30,68 2,52 2,18" fill="none" stroke="rgba(244,242,236,.08)" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <rect width="480" height="480" fill="url(#hexgrid)"/>
+        <!-- highlighted active cells -->
+        <g transform="translate(180,180)">
+          <polygon points="30,2 58,18 58,52 30,68 2,52 2,18" fill="rgba(232,169,92,.12)" stroke="#E8A95C" stroke-width="1.5"/>
+          <circle cx="30" cy="35" r="3" fill="#E8A95C"/>
+        </g>
+        <g transform="translate(240,145)">
+          <polygon points="30,2 58,18 58,52 30,68 2,52 2,18" fill="none" stroke="rgba(244,242,236,.5)" stroke-width="1.2"/>
+          <circle cx="30" cy="35" r="2" fill="rgba(244,242,236,.7)"/>
+        </g>
+        <g transform="translate(240,215)">
+          <polygon points="30,2 58,18 58,52 30,68 2,52 2,18" fill="none" stroke="rgba(244,242,236,.5)" stroke-width="1.2"/>
+          <circle cx="30" cy="35" r="2" fill="rgba(244,242,236,.7)"/>
+        </g>
+        <g transform="translate(120,215)">
+          <polygon points="30,2 58,18 58,52 30,68 2,52 2,18" fill="none" stroke="rgba(244,242,236,.3)" stroke-width="1.2"/>
+        </g>
+        <!-- connecting lines -->
+        <line x1="240" y1="215" x2="270" y2="180" stroke="#E8A95C" stroke-width="1" stroke-dasharray="2,3"/>
+        <line x1="240" y1="180" x2="270" y2="215" stroke="rgba(244,242,236,.4)" stroke-width="1" stroke-dasharray="2,3"/>
+        <line x1="180" y1="250" x2="210" y2="215" stroke="rgba(244,242,236,.3)" stroke-width="1" stroke-dasharray="2,3"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- =========== 06 COMPONENTS =========== -->
+  <section class="block">
+    <div class="section-head">
+      <div class="section-num">06 / Components</div>
+      <h2>Surface kit.</h2>
+      <p>The primitives the homepage will assemble from. Buttons are pill-shaped to feel softer than the typical tech rectangle. Cards have generous radii and live on a paper-tinted surface.</p>
+    </div>
+
+    <div class="grid grid-2" style="margin-bottom: 24px;">
+      <div class="card">
+        <span class="label" style="margin-bottom:18px;">Buttons</span>
+        <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center;">
+          <a class="btn btn-primary">Book intro call <span class="arrow">→</span></a>
+          <a class="btn btn-amber">See how it works <span class="arrow">→</span></a>
+          <a class="btn btn-secondary">Read case studies <span class="arrow">→</span></a>
+        </div>
+      </div>
+      <div class="card">
+        <span class="label" style="margin-bottom:18px;">Pills &amp; inputs</span>
+        <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:14px;">
+          <span class="pill"><span class="dot-amber"></span>Live · 47 agents</span>
+          <span class="pill">— 02 / Automation</span>
+        </div>
+        <div class="input-demo">
+          <input placeholder="What process should we automate?" />
+          <a class="btn btn-primary" style="padding: 10px 18px; font-size: 14px;">Send <span class="arrow">→</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="feature-card">
+        <div class="icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <polygon points="12,2 22,8 22,16 12,22 2,16 2,8" stroke="#F4F2EC" stroke-width="1.5" fill="none"/>
+            <circle cx="12" cy="12" r="2.5" fill="#E8A95C"/>
+          </svg>
+        </div>
+        <h4>Automation</h4>
+        <p>Replace recurring manual workflows with AI agents that learn your operating logic.</p>
+        <span class="label" style="margin-top:auto;">Learn more →</span>
+      </div>
+      <div class="feature-card">
+        <div class="icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="3" fill="#E8A95C"/>
+            <circle cx="4" cy="6" r="2" stroke="#F4F2EC" stroke-width="1.5" fill="none"/>
+            <circle cx="20" cy="6" r="2" stroke="#F4F2EC" stroke-width="1.5" fill="none"/>
+            <circle cx="4" cy="18" r="2" stroke="#F4F2EC" stroke-width="1.5" fill="none"/>
+            <circle cx="20" cy="18" r="2" stroke="#F4F2EC" stroke-width="1.5" fill="none"/>
+            <line x1="6" y1="7" x2="10" y2="11" stroke="#F4F2EC" stroke-width="1.2"/>
+            <line x1="18" y1="7" x2="14" y2="11" stroke="#F4F2EC" stroke-width="1.2"/>
+            <line x1="6" y1="17" x2="10" y2="13" stroke="#F4F2EC" stroke-width="1.2"/>
+            <line x1="18" y1="17" x2="14" y2="13" stroke="#F4F2EC" stroke-width="1.2"/>
+          </svg>
+        </div>
+        <h4>Agentic systems</h4>
+        <p>Custom multi-agent setups that plan, decide, and execute against your real-world tools.</p>
+        <span class="label" style="margin-top:auto;">Learn more →</span>
+      </div>
+      <div class="feature-card">
+        <div class="icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="9" stroke="#F4F2EC" stroke-width="1.5" fill="none"/>
+            <path d="M12 3 a9 9 0 0 1 9 9" stroke="#E8A95C" stroke-width="2" fill="none"/>
+            <circle cx="12" cy="12" r="2" fill="#F4F2EC"/>
+          </svg>
+        </div>
+        <h4>Consultation</h4>
+        <p>Strategy work for leadership: where AI will pay back, where it won't, and what to do first.</p>
+        <span class="label" style="margin-top:auto;">Learn more →</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========== 07 SHADOW + RADII =========== -->
+  <section class="block">
+    <div class="section-head">
+      <div class="section-num">07 / Spacing &amp; surface</div>
+      <h2>Tokens.</h2>
+      <p>Generous radii. Quiet shadows — never drop-shadowy. An 8-point spacing scale, with a 4-point half-step for tight layouts.</p>
+    </div>
+
+    <div class="tokens">
+      <div>
+        <span class="label" style="margin-bottom:10px;">Radii</span>
+        <div class="token-list">
+          <div class="row"><span class="k">--radius-s</span><span class="v">6px</span><span class="vis" style="background:var(--paper-2); border-radius:6px;"></span></div>
+          <div class="row"><span class="k">--radius-m</span><span class="v">14px</span><span class="vis" style="background:var(--paper-2); border-radius:14px;"></span></div>
+          <div class="row"><span class="k">--radius-l</span><span class="v">22px</span><span class="vis" style="background:var(--paper-2); border-radius:22px;"></span></div>
+          <div class="row"><span class="k">--radius-pill</span><span class="v">999px</span><span class="vis" style="background:var(--paper-2); border-radius:999px;"></span></div>
+        </div>
+      </div>
+      <div>
+        <span class="label" style="margin-bottom:10px;">Spacing scale</span>
+        <div class="token-list">
+          <div class="row"><span class="k">space-1</span><span class="v">4px</span><span class="vis" style="width:4px;height:28px;background:var(--midnight);border-radius:0;"></span></div>
+          <div class="row"><span class="k">space-2</span><span class="v">8px</span><span class="vis" style="width:8px;height:28px;background:var(--midnight);border-radius:0;"></span></div>
+          <div class="row"><span class="k">space-4</span><span class="v">16px</span><span class="vis" style="width:16px;height:28px;background:var(--midnight);border-radius:0;"></span></div>
+          <div class="row"><span class="k">space-6</span><span class="v">24px</span><span class="vis" style="width:24px;height:28px;background:var(--midnight);border-radius:0;"></span></div>
+          <div class="row"><span class="k">space-10</span><span class="v">40px</span><span class="vis" style="width:40px;height:28px;background:var(--midnight);border-radius:0;"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <span class="label" style="margin: 32px 0 14px; display:block;">Elevation</span>
+    <div class="grid grid-3">
+      <div class="shadow-card" style="box-shadow: var(--shadow-sm);">shadow-sm</div>
+      <div class="shadow-card" style="box-shadow: var(--shadow-md);">shadow-md</div>
+      <div class="shadow-card" style="box-shadow: var(--shadow-lg);">shadow-lg</div>
+    </div>
+  </section>
+
+  <!-- =========== 08 VOICE =========== -->
+  <section class="block">
+    <div class="section-head">
+      <div class="section-num">08 / Voice</div>
+      <h2>How we talk.</h2>
+      <p>Plain English, mid-sentence confidence. We say "agent," not "AI-powered intelligent assistant solution." We never explain that AI is "the future."</p>
+    </div>
+
+    <div class="voice">
+      <div class="col do">
+        <h5>— We say</h5>
+        <p>"A calmer way to run AI."</p>
+        <p>"We ship the agents. You keep the team."</p>
+        <p>"Less busywork. More business."</p>
+      </div>
+      <div class="col dont">
+        <h5>— We don't</h5>
+        <p>"Revolutionary AI-powered solutions for the future of enterprise."</p>
+        <p>"Unlock the power of next-generation intelligent automation."</p>
+        <p>"Synergize your workflows with our cutting-edge platform."</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="doc-foot">
+    <div>hyyve · brand foundation</div>
+    <div>v0.1 · awaiting review</div>
+  </footer>
+
+</div>
+
+</body>
+</html>

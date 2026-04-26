@@ -1,0 +1,92 @@
+/* Hyyve shared design tokens — used across all 3 homepage directions */
+:root {
+  --ink:        #0B1220;
+  --midnight:   #0F1B33;
+  --slate-900:  #1B2742;
+  --slate-700:  #354766;
+  --slate-500:  #6B7C9B;
+  --slate-300:  #B6C0D2;
+  --slate-200:  #D6DCE6;
+  --slate-100:  #E9ECF2;
+  --slate-50:   #F4F6FA;
+  --paper:      #F4F2EC;
+  --paper-2:    #ECE8DE;
+  --paper-tint: #FBF9F4;
+  --amber:      #E8A95C;
+  --amber-soft: #F4D9A8;
+  --amber-deep: #C68838;
+
+  --font-display: "Fraunces", "Times New Roman", serif;
+  --font-body:    "Inter Tight", -apple-system, system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", "SF Mono", Menlo, monospace;
+}
+
+.hy-frame {
+  width: 1440px;
+  font-family: var(--font-body);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+  position: relative;
+}
+.hy-frame * { box-sizing: border-box; }
+.hy-frame .label-mono {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.hy-frame .display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -.02em;
+  font-variation-settings: "opsz" 144;
+}
+.hy-frame .display-light { font-weight: 300; }
+
+/* Common nav */
+.hy-nav {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 56px;
+  z-index: 10;
+}
+.hy-logo {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 32px;
+  letter-spacing: -.04em;
+  font-variation-settings: "opsz" 144;
+}
+.hy-logo .dot { color: var(--amber); }
+.hy-nav-links {
+  display: flex; gap: 36px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+}
+.hy-nav-links a {
+  color: inherit; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.hy-cta-pill {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--midnight);
+  color: var(--paper);
+  font-size: 14px; font-weight: 500;
+  text-decoration: none;
+  border: none; cursor: pointer;
+}
+.hy-cta-pill .arrow {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.15);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 11px;
+}
