@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p ${PORT:-3000}",
     "lint": "eslint",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:migrate:deploy": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:seed": "tsx -r dotenv/config db/seed.ts dotenv_config_path=.env.local",
     "db:studio": "drizzle-kit studio",
