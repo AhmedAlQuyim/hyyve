@@ -1,26 +1,50 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-ink: #0B1220;
+  --color-midnight: #0F1B33;
+  --color-slate-900: #1B2742;
+  --color-slate-700: #354766;
+  --color-slate-500: #6B7C9B;
+  --color-slate-300: #B6C0D2;
+  --color-slate-200: #D6DCE6;
+  --color-slate-100: #E9ECF2;
+  --color-slate-50: #F4F6FA;
+  --color-paper: #F4F2EC;
+  --color-paper-2: #ECE8DE;
+  --color-paper-tint: #FBF9F4;
+  --color-amber: #E8A95C;
+  --color-amber-soft: #F4D9A8;
+  --color-amber-deep: #C68838;
+
+  --font-display: "Fraunces", "Times New Roman", serif;
+  --font-body: "Inter Tight", -apple-system, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html { background: var(--color-paper-tint); color: var(--color-ink); }
+  body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  .label-mono {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
   }
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    font-variation-settings: "opsz" 144;
+  }
+  .display-light { font-weight: 300; }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes hyyve-bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: .4; }
+  40% { transform: translateY(-4px); opacity: 1; }
+}
+@keyframes hyyve-tickin {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
