@@ -12,7 +12,7 @@ docker compose up -d         # local Postgres on port 5433
 pnpm install
 pnpm db:migrate              # apply schema
 pnpm db:seed                 # seed default site content (12 rows)
-pnpm dev                     # http://localhost:3000
+pnpm dev                     # http://localhost:3100 (port 3000 is often busy on dev machines)
 ```
 
 ## Tests
@@ -53,5 +53,6 @@ See `docs/superpowers/specs/2026-04-26-hyyve-company-site-design.md` for the ful
 
 ## Notes for contributors
 
-- Windows users: the `start` script uses POSIX shell expansion (`${PORT:-3000}`). Use Git Bash or set `PORT` explicitly.
+- Dev server defaults to **port 3100** (not 3000) to avoid conflicts with other local stacks. The `start` script uses POSIX shell expansion (`${PORT:-3100}`). On Railway, `$PORT` is provided by the platform.
+- Windows users: use Git Bash for the `${PORT:-3100}` expansion, or set `PORT` explicitly in cmd/PowerShell.
 - The `hyyve-design/` directory contains the original prototype from Claude Design — kept in-repo as the canonical visual reference.
